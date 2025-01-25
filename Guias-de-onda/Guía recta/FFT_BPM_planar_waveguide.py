@@ -9,7 +9,6 @@ Algoritmo FFT-BPM (Guía de ondas con perfil de índice de refracción escalón)
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import gridspec
 import time
 plt.style.use(['science','notebook'])
 

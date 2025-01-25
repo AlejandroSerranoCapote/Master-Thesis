@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 # Definir parámetros
 N = 100**2 # puntos de la malla x
-L = 200  # longitud de la caja Aumentarla elimina las reflexiones internas
+L = 200 # longitud de la caja Aumentarla elimina las reflexiones internas
 dx = L / N  # intervalo en la malla de posiciones
 x = np.arange(-L/2 + 1/N, L/2, dx)  # malla de posiciones (centrada en el origen)
 xmax = max(x)
