@@ -18,7 +18,7 @@ dx = L / N  # intervalo en la malla de posiciones
 x = np.arange(-L/2 + 1/N, L/2, dx)  # malla de posiciones (centrada en el origen)
 xmax = max(x)
 
-wl = 1  # longitud de onda en micras
+wl = 1.064  # longitud de onda en micras
 n0 = 1  # índice de refracción del vacío
 k0 = 2 * np.pi / wl  # número de onda en el vacío
 
@@ -27,7 +27,7 @@ kx = np.fft.fftfreq(N, d=dx) * 2 * np.pi  # malla de momentos con FFT
 kx = np.fft.fftshift(kx)  # Centrar la malla de momentos en cero
 K = n0 * k0  # número de onda en el medio
 
-w0 = 2 # ancho de la gaussiana
+w0 = 2.5 # ancho de la gaussiana
 E_z = np.exp(-x**2 / (2 * w0**2))
 
 dz = 0.5  # paso de propagación (debe ser pequeño para evitar artefactos)
@@ -95,7 +95,7 @@ print(f"Tiempo de ejecución: {end_time - start_time:.2f} segundos")
 # =============================================================================
 
 # Graficar intensidad
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(10, 6)) 
 plt.imshow(I_z, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='viridis')
 plt.xlabel('x $(\\mu m)$')
 plt.ylabel('z $(\\mu m)$')
@@ -110,4 +110,8 @@ plt.colorbar(label='Índice de refracción n(x, z)')
 plt.xlabel('x $(\\mu m)$')
 plt.ylabel('z $(\\mu m)$')
 plt.title('Perfil del índice de refracción en forma de Y')
+plt.show()
+
+plt.figure()
+plt.plot(I_z[-1,:])
 plt.show()

@@ -4,7 +4,8 @@ Created on Fri Jan 17 15:42:07 2025
 
 @author: Alejandro
 
-Algoritmo FFT-BPM (Guía de ondas con perfil de índice de refracción escalón)
+Algoritmo FFT-BPM (Guía de ondas con perfil de índice de refracción escalón) 
+UTILIZANDO DEPRESSED CLADDING (OJO)
 """
 
 import numpy as np
@@ -48,21 +49,27 @@ dn = 0.003 #modificación en el índice de refracción
 n1 = n0 - dn  # índice de refracción de la franja
 
 # Crear un perfil de índice de refracción con una franja rectangular
-width = 10  # Ancho de la franja rectangular en micras
-smooth_width = 1.5  # Ancho de la transición suave en micras
+width = 2  # Ancho de la franja rectangular en micras
+smooth_width = 0.5 # Ancho de la transición suave en micras
 
 n_profile = np.ones(len(x)) * n0  # Inicializar el perfil con n0
 
+x_track = 6
+Ntracks = 3
 
 # Usar una función sigmoide (tanh) para suavizar los bordes
-for i, xi in enumerate(x):
-    # Definir el índice de refracción dentro de la franja rectangular
-    # y aplicar una transición suave con tanh
-    if np.abs(xi - 15) < width / 2:
-        n_profile[i] = n1 + dn * 0.5 * (1 + np.tanh((np.abs(xi - 15) - (width / 2 - smooth_width)) / smooth_width))
-    elif np.abs(xi + 15) < width / 2:
-        n_profile[i] = n1 + dn * 0.5 * (1 + np.tanh((np.abs(xi + 15) - (width / 2 - smooth_width)) / smooth_width))
-                
+for k in range(Ntracks):
+    for i, xi in enumerate(x):
+        # Definir el índice de refracción dentro de la franja rectangular
+        # y aplicar una transición suave con tanh
+        if np.abs(xi - x_track) < width / 2:
+            n_profile[i] = n1 + dn * 0.5 * (1 + np.tanh((np.abs(xi - x_track) - (width / 2 - smooth_width)) / smooth_width))
+        
+        elif np.abs(xi + x_track) < width / 2:
+            n_profile[i] = n1 + dn * 0.5 * (1 + np.tanh((np.abs(xi + x_track) - (width / 2 - smooth_width)) / smooth_width))
+                 
+    x_track = x_track + 2 
+        
 # for i, xi in enumerate(x):
 #     # Definir el índice de refracción dentro de la franja rectangular
 #     if np.abs(xi-15) < width / 2 or  np.abs(xi+15) < width / 2:
@@ -110,4 +117,9 @@ plt.figure(figsize=(8,4))
 plt.plot(x,n_profile)
 plt.xlabel('x $(\\mu m)$')
 plt.ylabel('n(x)')
+plt.show()
+
+
+plt.figure()
+plt.plot(I_z[-1,:])
 plt.show()
