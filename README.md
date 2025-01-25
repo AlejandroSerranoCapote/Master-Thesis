@@ -1,2 +1,3 @@
-\mathfrak{F}
+$\mathfrak{F}$
+
  
