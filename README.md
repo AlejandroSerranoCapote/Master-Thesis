@@ -2,7 +2,7 @@
 
 **VACUUM GAUSSIAN BEAM:**
 
-![HazEnVacioGauss_SIN_DIFRACCIÓN](https://github.com/user-attachments/assets/ed7c5b52-6804-4a54-aacf-d319671c0688)
+![HazEnVacioGauss_SIN_DIFRACCIÓN](https://github.com/user-attachments/assets/ed7c5b52-6804-4a54-aacf-d319671c0688|width =100)
 
 **PLANAR WAVEGUIDE:**
 
