@@ -7,6 +7,7 @@ Optimizado para permitir un número arbitrario de tracks.
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+from math import *
 plt.style.use(['science', 'notebook'])
 
 # =============================================================================
@@ -49,19 +50,21 @@ I_z = np.zeros((len(z), N))  # matriz para almacenar la intensidad
 
 n_profile = np.ones((len(z), len(x)))*n0  # Inicializar matriz del índice de refracción
 
-width = 1  # Ancho de cada track en micras
-separation = 4  # Separación entre los tracks en micras
-offset = 5  # Desplazamiento inicial (micras)
-num_tracks = 3  # Número de tracks a cada lado del centro
+width = 0.3  # Ancho de cada track en micras
+separation = 1.5  # Separación entre los tracks en micras
+offset = 2 # Desplazamiento inicial (micras)
+num_tracks = 5  # Número de tracks a cada lado del centro
 
 # Función que define los tracks de la guía de onda
 def f(z_val):
     """
     FUNCION QUE MODELA LOS TRACKS DE LA GUÍA DE ONDA
     """
-    return 15 * np.sin(z_val / 900)**2
-    # return (z_val/400)**2
+    # return 5*asin(z_val /zmax)
+    # return 10*np.sin(z_val /800)**2
+    return (z_val/400)**2
     # return (z_val/200)
+    # return 5*np.sqrt(z_val/500)
 
 # Medir tiempo de inicio
 start_time = time.time()
