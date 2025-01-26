@@ -19,7 +19,7 @@ x = np.arange(-L/2 + 1/N, L/2, dx)  # malla de posiciones (centrada en el origen
 xmax = max(x)
 
 wl = 1.064  # longitud de onda en micras
-n0 = 1  # índice de refracción del vacío
+n0 = 1.5  # índice de refracción base del medio
 k0 = 2 * np.pi / wl  # número de onda en el vacío
 
 dkx = 2 * np.pi / L  # intervalo en la malla de momento
@@ -43,11 +43,8 @@ I_z = np.zeros((len(z), N))  # matriz para almacenar la intensidad
 # =============================================================================
 # Crear un perfil de índice de refracción n(x, z) en forma de Y
 # =============================================================================
-n0 = 1.5  # índice de refracción base del medio
 dn = 0.01 # modificación en el índice de refracción
 n1 = n0 + dn  # índice de refracción más bajo
-
-
 
 n_profile = np.ones((len(z), len(x))) * n0  # Inicializar matriz del índice de refracción
 
@@ -112,6 +109,7 @@ plt.ylabel('z $(\\mu m)$')
 plt.title('Perfil del índice de refracción en forma de Y')
 plt.show()
 
+#Graficamos el perfil de intensidad a la salida de la guía de onda
 plt.figure()
 plt.plot(I_z[-1,:])
 plt.show()
