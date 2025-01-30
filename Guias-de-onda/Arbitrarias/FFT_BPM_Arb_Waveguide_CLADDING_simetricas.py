@@ -23,7 +23,7 @@ wl = 1.064 # longitud de onda en micras
 k0 = 2 * np.pi / wl  # número de onda en el vacío
 
 n0 = 2.2  # índice de refracción base del medio
-dn = 0.003  # modificación en el índice de refracción
+dn = 0.004  # modificación en el índice de refracción
 n1 = n0 - dn  # índice de refracción más bajo
 
 dkx = 2 * np.pi / L  # intervalo en la malla de momento
@@ -34,7 +34,7 @@ K = n0 * k0  # número de onda en el medio
 w0 = 2.5# ancho de la gaussiana (micras)
 E_z = np.exp(-x**2 / (2 * w0**2))
 
-dz = 0.5 # paso de propagación (debe ser pequeño para evitar artefactos)
+dz = 0.25 # paso de propagación (debe ser pequeño para evitar artefactos)
 zmax = 1000  # distancia de propagación en micras
 z = np.arange(0, zmax + dz, dz)  # vector de propagación
 
@@ -51,8 +51,8 @@ I_z = np.zeros((len(z), N))  # matriz para almacenar la intensidad
 n_profile = np.ones((len(z), len(x)))*n0  # Inicializar matriz del índice de refracción
 
 width = 0.5  # Ancho de cada track en micras
-separation = 2 # Separación entre los tracks en micras
-offset = 3 # Desplazamiento inicial (micras)
+separation = 1.5 # Separación entre los tracks en micras
+offset = 5 # Desplazamiento inicial (micras)
 num_tracks = 3 # Número de tracks a cada lado del centro
 
 # Función que define los tracks de la guía de onda
@@ -61,7 +61,7 @@ def f(z_val):
     FUNCION QUE MODELA LOS TRACKS DE LA GUÍA DE ONDA
     """
     #return 5*asin(z_val /zmax)
-    return 15*np.sin(z_val /800)**2
+    return 15 * np.sin(z_val / 750)**2
     #return (z_val/400)**2
     #return (z_val/150)
     #return 5*np.sqrt(z_val/200)
@@ -83,7 +83,7 @@ for zi, zi_val in enumerate(z):
         # Verificar si el punto pertenece a algún track
         for center in centers:
             if np.abs(xi_val - center) < width:
-                n_profile[-zi, xi] = n1 #Cambiando zi por -zi obtenemos las guías al revés (útil)
+                n_profile[zi, xi] = n1 #Cambiando zi por -zi obtenemos las guías al revés (útil)
                 break  # Salir del bucle si ya pertenece a un track
                 
 # Precalcular dn2
@@ -133,7 +133,7 @@ plt.show()
 #Graficamos el perfil de intensidad a la salida de la guía de onda
 plt.figure()
 x = np.linspace(-xmax,xmax,len(I_z[-1,:]))
-plt.plot(x,I_z[-1,:])
+plt.plot(x,I_z[0,:])
 plt.xlabel('x $(\\mu m)$')
 plt.ylabel('Intensidad (u.arb)')
 plt.show()
