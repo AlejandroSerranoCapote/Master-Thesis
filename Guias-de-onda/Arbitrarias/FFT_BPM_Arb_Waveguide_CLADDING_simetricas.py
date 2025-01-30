@@ -34,7 +34,7 @@ K = n0 * k0  # número de onda en el medio
 w0 = 2.5# ancho de la gaussiana (micras)
 E_z = np.exp(-x**2 / (2 * w0**2))
 
-dz = 0.25 # paso de propagación (debe ser pequeño para evitar artefactos)
+dz = 0.5 # paso de propagación (debe ser pequeño para evitar artefactos)
 zmax = 1000  # distancia de propagación en micras
 z = np.arange(0, zmax + dz, dz)  # vector de propagación
 
@@ -61,8 +61,8 @@ def f(z_val):
     FUNCION QUE MODELA LOS TRACKS DE LA GUÍA DE ONDA
     """
     #return 5*asin(z_val /zmax)
-    return 15 * np.sin(z_val / 750)**2
-    #return (z_val/400)**2
+    #return 15 * np.sin(z_val / 750)**2
+    return (z_val/400)**2
     #return (z_val/150)
     #return 5*np.sqrt(z_val/200)
     #return 1
@@ -113,27 +113,49 @@ print(f"Tiempo de ejecución: {end_time - start_time:.2f} segundos")
 # =============================================================================
 
 # Graficar intensidad en 2D
-plt.figure(figsize=(10, 6))
+# plt.figure(figsize=(10, 6))
+# plt.imshow(I_z, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='viridis')
+# plt.xlabel('x $(\\mu m)$')
+# plt.ylabel('z $(\\mu m)$')
+# plt.colorbar(label='Intensidad')
+# plt.title('Propagación usando el método FFT BPM')
+# plt.show()
+
+# Graficar índice de refracción n(x, z)
+# plt.figure(figsize=(10, 6))
+# plt.imshow(n_profile, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='coolwarm')
+# plt.colorbar(label='Índice de refracción n(x, z)')
+# plt.xlabel('x $(\\mu m)$')
+# plt.ylabel('z $(\\mu m)$')
+# plt.title('Perfil del índice de refracción n(x, z)')
+# plt.show()
+
+#Graficamos el perfil de intensidad a la salida de la guía de onda
+x = np.linspace(-xmax,xmax,len(I_z[-1,:]))
+plt.figure(figsize=(14,7))
+plt.subplot(2,2,1)
 plt.imshow(I_z, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='viridis')
 plt.xlabel('x $(\\mu m)$')
 plt.ylabel('z $(\\mu m)$')
 plt.colorbar(label='Intensidad')
 plt.title('Propagación usando el método FFT BPM')
-plt.show()
-
-# Graficar índice de refracción n(x, z)
-plt.figure(figsize=(10, 6))
+plt.subplot(2,2,3)
 plt.imshow(n_profile, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='coolwarm')
 plt.colorbar(label='Índice de refracción n(x, z)')
 plt.xlabel('x $(\\mu m)$')
 plt.ylabel('z $(\\mu m)$')
 plt.title('Perfil del índice de refracción n(x, z)')
-plt.show()
-
-#Graficamos el perfil de intensidad a la salida de la guía de onda
-plt.figure()
-x = np.linspace(-xmax,xmax,len(I_z[-1,:]))
+plt.subplot(2,2,2)
+plt.title("Intensidad a la entrada")
+plt.grid()
 plt.plot(x,I_z[0,:])
+plt.xlim(xmin=-50,xmax=50)
+plt.ylabel('Intensidad (u.arb)')
+plt.subplot(2,2,4)
+plt.plot(x,I_z[-1,:])
+plt.grid()
+plt.title("Intensidad a la salida")
 plt.xlabel('x $(\\mu m)$')
 plt.ylabel('Intensidad (u.arb)')
+plt.xlim(xmin=-50,xmax=50)
 plt.show()
