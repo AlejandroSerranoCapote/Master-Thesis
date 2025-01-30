@@ -22,8 +22,9 @@
 ![OndaSimétricaSeno2](https://github.com/user-attachments/assets/378b8fa9-b771-4cf7-b148-5fe70f00e61e)
 ![Perfil_indice_SENO2_simetrico](https://github.com/user-attachments/assets/958fcb57-1bf5-40eb-9761-b8ecc3e0e5ed)
 
+**Intensidad a la entrada**
+![Perfil_intensidad_Entrada](https://github.com/user-attachments/assets/7ac4c146-b4e0-46c3-92c5-d29459faeb82)
 **Intensidad a la salida**
 ![IntensidadSalida](https://github.com/user-attachments/assets/9218a549-30b3-45fe-adf4-14a68ca688f1)
 
-**Intensidad a la salida**
-![Perfil_intensidad_Entrada](https://github.com/user-attachments/assets/7ac4c146-b4e0-46c3-92c5-d29459faeb82)
+
