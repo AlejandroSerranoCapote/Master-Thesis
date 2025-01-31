@@ -27,4 +27,7 @@
 **Intensidad a la salida**
 ![IntensidadSalida](https://github.com/user-attachments/assets/9218a549-30b3-45fe-adf4-14a68ca688f1)
 
-
+# Estudios completos de guías de onda
+![Fig1](https://github.com/user-attachments/assets/bc1fcdf3-05c6-4981-9036-bd642b1762f0)
+![fig2(ASIN)](https://github.com/user-attachments/assets/2c9d313c-5c6c-4539-b5d4-40753400d600)
+![fig3_quad](https://github.com/user-attachments/assets/8661a274-2028-4376-9826-58b9f60781f4)
