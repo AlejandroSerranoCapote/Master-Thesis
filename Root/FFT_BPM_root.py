@@ -55,3 +55,5 @@ plt.ylabel('z $(\\mu m)$')
 plt.colorbar(label='Intensidad')
 plt.title('Propagación usando el método FFT BPM')
 plt.show()
+
+

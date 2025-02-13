@@ -13,7 +13,7 @@ plt.style.use(['science', 'notebook'])
 # =============================================================================
 # Definir parámetros
 # =============================================================================
-N = 2**12 #Puntos de la malla x
+N = 2**10 #Puntos de la malla x
 L = 200    #Longitud de la caja
 dx = L / N  # intervalo en la malla de posiciones
 x = np.arange(-L/2 + 1/N, L/2, dx)  # malla de posiciones (centrada en el origen)
@@ -34,7 +34,7 @@ K = n0 * k0  # número de onda en el medio
 w0 = 2.5# ancho de la gaussiana (micras)
 E_z = np.exp(-x**2 / (2 * w0**2))
 
-dz = 0.5 # paso de propagación (debe ser pequeño para evitar artefactos)
+dz = 2 # paso de propagación (debe ser pequeño para evitar artefactos)
 zmax = 1000  # distancia de propagación en micras
 z = np.arange(0, zmax + dz, dz)  # vector de propagación
 
@@ -53,7 +53,7 @@ n_profile = np.ones((len(z), len(x)))*n0  # Inicializar matriz del índice de re
 width = 0.5  # Ancho de cada track en micras
 separation = 1.5 # Separación entre los tracks en micras
 offset = 5 # Desplazamiento inicial (micras)
-num_tracks = 3 # Número de tracks a cada lado del centro
+num_tracks = 4 # Número de tracks a cada lado del centro
 
 # Función que define los tracks de la guía de onda
 def f(z_val):
@@ -73,19 +73,24 @@ start_time = time.time()
 # Crear tracks simétricos y con apertura en las guías de la derecha
 for zi, zi_val in enumerate(z):
     for xi, xi_val in enumerate(x):
-        # Definir los centros de los tracks
-        centers_left = [-(offset + i * separation) - f(zi_val) for i in range(num_tracks)]
-        centers_right = [(offset + i * separation) + f(zi_val) for i in range(num_tracks)]
         
-        # Combinar los centros de las guías izquierda y derecha
+        if zi_val < 500:  # Primera parte recta
+            centers_left = [-(offset + i * separation) for i in range(num_tracks)]
+            centers_right = [(offset + i * separation) for i in range(num_tracks)]
+        else:    
+            # Definir los centros de los tracks
+            centers_left = [-(offset + i * separation) - f(zi_val) for i in range(num_tracks)]
+            centers_right = [(offset + i * separation) + f(zi_val) for i in range(num_tracks)]
+        
+            # Combinar los centros de las guías izquierda y derecha
         centers = centers_left + centers_right
-
+    
         # Verificar si el punto pertenece a algún track
         for center in centers:
             if np.abs(xi_val - center) < width:
                 n_profile[zi, xi] = n1 #Cambiando zi por -zi obtenemos las guías al revés (útil)
                 break  # Salir del bucle si ya pertenece a un track
-                
+                    
 # Precalcular dn2
 dn2_profile = n_profile**2 - n0**2
 
@@ -113,22 +118,22 @@ print(f"Tiempo de ejecución: {end_time - start_time:.2f} segundos")
 # =============================================================================
 
 # Graficar intensidad en 2D
-# plt.figure(figsize=(10, 6))
-# plt.imshow(I_z, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='viridis')
-# plt.xlabel('x $(\\mu m)$')
-# plt.ylabel('z $(\\mu m)$')
-# plt.colorbar(label='Intensidad')
-# plt.title('Propagación usando el método FFT BPM')
-# plt.show()
+plt.figure(figsize=(10, 6))
+plt.imshow(I_z, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='viridis')
+plt.xlabel('x $(\\mu m)$')
+plt.ylabel('z $(\\mu m)$')
+plt.colorbar(label='Intensidad')
+plt.title('Propagación usando el método FFT BPM')
+plt.show()
 
 # Graficar índice de refracción n(x, z)
-# plt.figure(figsize=(10, 6))
-# plt.imshow(n_profile, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='coolwarm')
-# plt.colorbar(label='Índice de refracción n(x, z)')
-# plt.xlabel('x $(\\mu m)$')
-# plt.ylabel('z $(\\mu m)$')
-# plt.title('Perfil del índice de refracción n(x, z)')
-# plt.show()
+plt.figure(figsize=(10, 6))
+plt.imshow(n_profile, extent=[-xmax, xmax, 0, zmax], aspect='auto', origin='lower', cmap='coolwarm')
+plt.colorbar(label='Índice de refracción n(x, z)')
+plt.xlabel('x $(\\mu m)$')
+plt.ylabel('z $(\\mu m)$')
+plt.title('Perfil del índice de refracción n(x, z)')
+plt.show()
 
 #Graficamos el perfil de intensidad a la salida de la guía de onda
 x = np.linspace(-xmax,xmax,len(I_z[-1,:]))
