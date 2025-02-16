@@ -26,7 +26,7 @@ start_time = time.time() #Empezamos a medir el tiempo de ejecución del programa
 # =============================================================================
 #  Parámetros computacionales
 # =============================================================================
-N = 4000                                                   # Puntos en la malla espacial
+N = 2000                                                   # Puntos en la malla espacial
 L = 1000                                                   # Longitud de la caja (micras)
 dx = L / N                                                 # Espaciado de la malla
 x = np.arange(-L/2 + 1/N, L/2, dx)                         # Vector de posiciones
@@ -38,7 +38,7 @@ xmax = max(x)                                              # Valor máximo de x
 # Parámetros ópticos
 # =============================================================================
 wl = 1.064                          # Longitud de onda (micras)
-n0 = 2.2                            # Índice de refracción base
+n0 = 2.2321                         # Índice de refracción base 
 k0 = 2 * np.pi / wl                 # Número de onda en el vacío
 K = n0 * k0                         # Número de onda en el medio
 dn = 0.004                          # Cambio en el índice de refracción
@@ -120,7 +120,7 @@ def curve(z_val):
 # Aplicar solo en la región que tengamos la apertura suave
 mask_curve = (Z >= zona_recta) & (Z < zona_apertura)
   
-offset1 = zona_recta + 900         #Para que los tracks de dentro no se superpongan a los de fuera
+offset1 = zona_recta + 800         #Para que los tracks de dentro no se superpongan a los de fuera
 mask_tracks_interiores = (Z >= offset1) & (Z < zona_apertura) 
 
 width = W0/2 + curve(Z) #anchura variable en función de z

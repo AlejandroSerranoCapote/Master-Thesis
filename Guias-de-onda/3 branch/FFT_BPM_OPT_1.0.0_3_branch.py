@@ -26,7 +26,7 @@ start_time = time.time() #Empezamos a medir el tiempo de ejecución del programa
 # =============================================================================
 #  Parámetros computacionales
 # =============================================================================
-N = 3000                                                   # Puntos en la malla espacial
+N = 2000                                                   # Puntos en la malla espacial
 L = 1000                                                   # Longitud de la caja (micras)
 dx = L / N                                                 # Espaciado de la malla
 x = np.arange(-L/2 + 1/N, L/2, dx)                         # Vector de posiciones
@@ -37,8 +37,8 @@ xmax = max(x)                                              # Valor máximo de x
 # =============================================================================
 # Parámetros ópticos
 # =============================================================================
-wl = 1.064                          # Longitud de onda (micras)
-n0 = 2.2321                         # Índice de refracción base
+wl = 1.064                         # Longitud de onda (micras)
+n0 = 2.2321                          # Índice de refracción base
 k0 = 2 * np.pi / wl                 # Número de onda en el vacío
 K = n0 * k0                         # Número de onda en el medio
 dn = 0.004                          # Cambio en el índice de refracción
@@ -119,30 +119,25 @@ def curve(z_val):
 
 # Aplicar solo en la región que tengamos la apertura suave
 mask_curve = (Z >= zona_recta) & (Z < zona_apertura)
-mask_curve_interior = (Z >= zona_recta + 1000) & (Z < zona_apertura)
 
 width = W0/2 + curve(Z) #anchura variable en función de z
 
 # Generar posiciones de los tracks exteriores curvados
 x_positions_curve = width[..., None] + np.array([i * track_sep for i in range(1, num_tracks + 1)])
-x_positions_curve2 = width[..., None] - W +  np.array([i * track_sep for i in range(1, num_tracks + 1)])
-
 x_positions_curve = np.concatenate([-x_positions_curve,x_positions_curve], axis=-1)        # Simetría
-x_positions_curve2 = np.concatenate([-x_positions_curve2,x_positions_curve2],axis=-1)
 
 # Crear máscara para los tracks en la región curva
 mask_tracks_curve = (np.abs(X[..., None] - x_positions_curve) < track_width / 2).any(axis=-1)
-mask_tracks_curve2 = (np.abs(X[..., None] - x_positions_curve2) < track_width / 2).any(axis=-1)
 
 # Aplicar la condición en la región curva
 n_profile[mask_curve & mask_tracks_curve] = n1
-n_profile[mask_curve_interior & mask_tracks_curve2] = n1
 
 
 # =============================================================================
 # SECTORES RECTOS DESPUÉS DE LA APERTURA
 # =============================================================================
 mask_transition = (Z >= zona_apertura) & (Z< zmax)           # Máscara para la región del splitter
+mask_transition2 = (Z >= 7000) & (Z < zmax) 
 
 width_final = W0 / 2 + curve(zona_apertura)            # Cálculo del ancho variable para la transición
 
@@ -160,8 +155,72 @@ mask_tracks_final = (np.abs(X[..., None] - x_positions_final) < track_width / 2)
 mask_tracks_final_2 = (np.abs(X[..., None] - x_positions_final_2) < track_width / 2).any(axis=-1)
 
 n_profile[mask_transition & (mask_tracks_final)] = n1
-n_profile[mask_transition & (mask_tracks_final_2)] = n1
+n_profile[mask_transition2 & (mask_tracks_final_2)] = n1
 
+# =============================================================================
+#  SEGUNDA BIFURCACIÓN O SPLITTER
+# =============================================================================
+
+xf = 100                #Posición final de las guías de onda rectas del splitter
+W_split = W/1.35        #Anchura de las guías de onda del splitter
+offset2 = 400           #Offset dado para que los tracks interiores no solapen a los exteriores
+
+
+pi = (W0 / 2 + curve(zona_apertura)-W,7000)      #Posición inicial donde comienza la guía recta final
+pf = (33,6700)                                   #Posición final donde termina la guía recta final
+
+def recta(z,pi,pf,sim = False):
+    xf,zf = pf
+    xi,zi = pi
+    m = (xf - xi) / (zf - zi) 
+    if sim == True:   
+        return xi - m * (z - zi)
+    elif sim == False:
+        return xi + m * (z - zi)
+
+mask_transition_splitter = (Z >= 6700) & (Z< 7000)   # Máscara para la región del splitter
+
+width_final = recta(Z,pi,pf)             # Cálculo del ancho variable para la transición
+
+x_positions_splitter = width_final[..., None] + np.array([i * track_sep for i in range(1, num_tracks + 1)])
+x_positions_splitter_2 = width_final[..., None] + np.array([i * track_sep for i in range(1, num_tracks + 1)])
+
+x_positions_splitter = np.concatenate([x_positions_splitter,-x_positions_splitter_2], axis=-1)  # Simetría
+
+
+mask_tracks_splitter = (np.abs(X[..., None] - x_positions_splitter) < track_width / 2).any(axis=-1)
+
+n_profile[mask_transition_splitter & (mask_tracks_splitter)] = n1 
+
+
+pf = (W0 / 2 + curve(zona_apertura)-3.7*W,7000)      #Posición inicial donde comienza la guía recta final
+pi = (33,6700)                                #Posición final donde termina la guía recta final
+
+
+mask_transition_splitter = (Z >= 6700) & (Z< 7000)   # Máscara para la región del splitter
+
+
+width_final = recta(Z,pi,pf)             # Cálculo del ancho variable para la transición
+
+x_positions_splitter = width_final[..., None] + np.array([i * track_sep for i in range(1, num_tracks + 1)])
+x_positions_splitter_2 = width_final[..., None] + np.array([i * track_sep for i in range(1, num_tracks + 1)])
+
+x_positions_splitter = np.concatenate([x_positions_splitter,-x_positions_splitter_2], axis=-1)  # Simetría
+
+
+mask_tracks_splitter = (np.abs(X[..., None] - x_positions_splitter) < track_width / 2).any(axis=-1)
+
+n_profile[mask_transition_splitter & (mask_tracks_splitter)] = n1 
+
+# Generar posiciones para la parte central (última región)
+mask_transition2 = (Z >= 7000) & (Z< zmax)
+center = 0
+x_positions_center = center + np.array([W / 2 + i * track_sep for i in range(1, num_tracks + 1)])
+x_positions_center = np.concatenate([-x_positions_center, x_positions_center], axis=-1)  # Simetría
+mask_tracks_center = (np.abs(X[..., None] - x_positions_center) < track_width / 2).any(axis=-1)
+
+# Aplicar la condición en la región de transición
+n_profile[mask_transition2 & (mask_tracks_center)] = n1
 
 '''
     ALGORITMO FFT-BPM
